@@ -1,5 +1,11 @@
 package soliddomino.game.main;
 
+import soliddomino.game.managers.Dealer;
+import soliddomino.game.managers.Board;
+import soliddomino.game.components.Piece;
+import soliddomino.game.components.Player;
+import soliddomino.game.movement.Turn;
+import soliddomino.game.movement.Movement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,65 +16,37 @@ public class Domino {
     private Board board;
     private ArrayList<Player> players;
     public static int PIECES_PER_PLAYER = 7;
+    private Dealer dealer;
+    private Turn turn;
     
     public Domino(){
         pieces = board.loadPieces();
         board.shuffle(pieces);
+        dealer = new Dealer(players);
     }
     
     public void init(){
         createPlayers(2);
-        distributePiecesToPlayers();
+        dealer.distributePiecesToPlayers(pieces);
     }
     
     public String play(){
-        
-        Player startingPlayer = chooseStartingPlayer();
-        return "";
+        Player currentPlayer = dealer.chooseStartingPlayer();
+        do {
+            Movement currentMove = dealer.getPlayerMovement(currentPlayer, board);
+            if(currentMove.isPassed())
+                dealer.agregatePieceToPlayer(currentPlayer, pieces);
+            else
+                board.applyMove(currentMove);
+            
+            currentPlayer = dealer.nextPlayerTakingTurn();
+        }while(!(turn.HasWon(currentPlayer)));
+        return currentPlayer.getName();
     } 
-
+    
     private void createPlayers(int numberOfPlayers) {
         for(int i = 1; i <= numberOfPlayers; i++)
             players.add(new Player("Player " + i));
     }
-
-    private void distributePiecesToPlayers() {
-        for(Player player : players)
-            player.takePieces(PIECES_PER_PLAYER, pieces);        
-    }
-
-    private Player chooseStartingPlayer() {
-        HashMap<Player, Piece> playerPieces = new HashMap<Player, Piece>();
-        fillHighestPair(playerPieces);
-        
-        if(playerPieces.isEmpty()){
-            fillHighestPiece(playerPieces);
-        }
-        
-        return getTopFromHashMap(playerPieces);
-    }
     
-    private void fillHighestPair(HashMap<Player, Piece> playerPieces){
-        for(Player player : players){
-            playerPieces.put(player, player.getHighestPair());
-            playerPieces.remove(player, null);
-        }
-    }
-    
-    private void fillHighestPiece(HashMap<Player, Piece> playerPieces){
-        for(Player player : players)
-            playerPieces.put(player, player.getHighestPiece());
-    }
-    
-    private Player getTopFromHashMap(HashMap<Player, Piece> playersPieces){
-        List<Piece> pieceList = new ArrayList<Piece>(playersPieces.values());
-        List<Player> playerList = new ArrayList<Player>(playersPieces.keySet());
-        int index = 0;
-        for(int i = 0; i < playerList.size() ; i++){
-            if(pieceList.get(index).getSumOfValues() < pieceList.get(i).getSumOfValues()){
-                index = i;
-            }
-        }
-        return playerList.get(index);
-    }
 }
