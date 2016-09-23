@@ -1,0 +1,2 @@
+# SolidDomino
+Domino following SOLID.
