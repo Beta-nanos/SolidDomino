@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import soliddomino.game.managers.ConsoleBoard;
+import soliddomino.game.movement.ConsoleMovementBuilder;
 
 public class Domino {
     private List<Piece> pieces;
@@ -26,6 +27,7 @@ public class Domino {
         pieces = board.loadPieces();
         board.shuffle(pieces);
         dealer = new Dealer(players);
+        dealer.setMovementBuilder(new ConsoleMovementBuilder());
     }
     
     public void init(){
