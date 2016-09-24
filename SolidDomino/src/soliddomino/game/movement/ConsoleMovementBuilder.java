@@ -1,24 +1,31 @@
 package soliddomino.game.movement;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.exceptions.IncorrectMoveFormatException;
 import soliddomino.game.exceptions.WrongDirectionException;
+import soliddomino.game.managers.Board;
+import soliddomino.game.managers.ConsoleBoard;
 
 public class ConsoleMovementBuilder implements MovementBuilder{
+    private Player player;
+    
+    public void setPlayer(Player player){
+        this.player = player;
+    }
     
     @Override
-    public Movement generateMovement(Player player) {
+    public Movement generateMovement(Board board) {
         Movement movement = null;
-        player.printPieces();
-        System.out.println("Which piece would you move in what direction?");
-        System.out.println("options:\n-Number of Piece - direction(e.g left, right)\n-Pass");
-        Scanner scan = new Scanner(System.in);
-        String answer = scan.next().toLowerCase().trim();
+        ((ConsoleBoard)board).showPieces(player.getPieces());
+        String message = "Which piece would you move in what direction?\nOptions:\n-Number of Piece - direction(e.g left, right)\n-Pass";
+        String answer = questionAndGetAnswer(message);
         try {
-            movement = answerValidation(answer, movement);
+            movement = answerValidation(answer);
         } catch (IncorrectMoveFormatException | NumberFormatException | WrongDirectionException ex) {
             Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
@@ -26,8 +33,15 @@ public class ConsoleMovementBuilder implements MovementBuilder{
         return movement;
     }
 
+    private String questionAndGetAnswer(String message) {
+        System.out.println(message);
+        Scanner scan = new Scanner(System.in);
+        return scan.next().toLowerCase().trim();
+    }
+
     @Override
-    public Movement answerValidation(String answer, Movement movement) throws IncorrectMoveFormatException, NumberFormatException, WrongDirectionException {
+    public Movement answerValidation(String answer) throws IncorrectMoveFormatException, NumberFormatException, WrongDirectionException {
+        Movement movement = null;
         if (answer.equalsIgnoreCase("pass")) {
             movement = new Movement(true);
         } else {
@@ -36,18 +50,19 @@ public class ConsoleMovementBuilder implements MovementBuilder{
                 throw new IncorrectMoveFormatException(answer);
             }
             int index = Integer.parseInt(array[0]);
-            movement = buildMovement(index, answer, movement);
+            movement = buildMovement(index, answer);
         }
         return movement;
     }
 
     @Override
-    public Movement buildMovement(int index, String direction, Movement movement, Player player) throws WrongDirectionException {
-        if (index > 0 && index <= player.pieces.size()) {
-            DIRECTION chosenDirection = null;
-            chosenDirection = buildDirection(direction);
-            movement = new Movement(player.pieces.get(index), chosenDirection);
-            player.pieces.remove(index);
+    public Movement buildMovement(int index, String direction) throws WrongDirectionException {
+        Movement movement = null;
+        List<Piece> playerPieces = player.getPieces();
+        if (index > 0 && index <= playerPieces.size()) {
+            movement = new Movement(playerPieces.get(index), 
+                    buildDirection(direction));
+            playerPieces.remove(index);
         }
         return movement;
     }
