@@ -1,10 +1,12 @@
 package soliddomino.game.main;
 
+import soliddomino.game.dominos.Domino;
 import java.util.Scanner;
+import soliddomino.game.dominos.ConsoleDomino;
 
 public class SolidDomino {
     public static void main(String[] args) {
-        Domino game = new Domino();
+        Domino game = new ConsoleDomino();
         Scanner scan = new Scanner(System.in);
         String replayAnswer = "n";
         

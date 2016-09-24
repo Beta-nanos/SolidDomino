@@ -1,4 +1,4 @@
-package soliddomino.game.main;
+package soliddomino.game.dominos;
 
 import soliddomino.game.managers.Dealer;
 import soliddomino.game.managers.Board;
@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
-import soliddomino.game.managers.ConsoleBoard;
-import soliddomino.game.movement.ConsoleMovementBuilder;
+import soliddomino.game.movement.MovementBuilder;
 
-public class Domino {
+public abstract class Domino {
     private List<Piece> pieces;
     private Board board;
     private ArrayList<Player> players;
@@ -22,12 +21,12 @@ public class Domino {
     private Dealer dealer;
     private Turn turn;
     
-    public Domino(){
-        board = new ConsoleBoard();
+    public Domino(Board board, MovementBuilder movementBuilder){
+        this.board = board;
         pieces = board.loadPieces();
         board.shuffle(pieces);
         dealer = new Dealer(players);
-        dealer.setMovementBuilder(new ConsoleMovementBuilder());
+        dealer.setMovementBuilder(movementBuilder);
     }
     
     public void init(){
@@ -44,13 +43,13 @@ public class Domino {
         do {
             getMovementFromPlayer(currentPlayer);
             currentPlayer = dealer.nextPlayerTakingTurn();
-        }while(!(turn.HasWon(currentPlayer)));
+        }while(!(turn.hasWon(currentPlayer)));
         return currentPlayer.getName();
     } 
 
     private void getMovementFromPlayer(Player currentPlayer) {
         Movement currentMove = dealer.getPlayerMovement(currentPlayer, board);
-        if(currentMove.isPassed())
+        if(currentMove.isPass())
             dealer.addPieceToPlayer(currentPlayer, pieces);
         else
             board.applyMove(currentMove);
