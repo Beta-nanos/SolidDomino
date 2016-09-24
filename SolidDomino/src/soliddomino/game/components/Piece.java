@@ -7,6 +7,8 @@ public class Piece {
     public Piece(int lvalue, int rvalue){
         leftValue = lvalue;
         rightValue = rvalue;
+        leftPiece = null;
+        rightPiece = null;
     }
     
     public int getSumOfValues() {

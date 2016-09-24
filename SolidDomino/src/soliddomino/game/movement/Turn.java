@@ -14,15 +14,14 @@ public class Turn {
         boolean validMove = false;
         if (currentMove != null) {
             Piece piece = currentMove.getPiece();
-
+            DIRECTION currentDirection = currentMove.getDirection();
             if ((currentMove.isPass()
-                    || piece.getLeftValue() == board.getMostLeftValue()
-                    || piece.getRightValue() == board.getMostRightValue())
+                    || (currentDirection == DIRECTION.LEFT && (piece.getLeftValue() == board.getMostLeftValue() || piece.getRightValue() == board.getMostLeftValue()))
+                    || (currentDirection == DIRECTION.RIGHT && (piece.getLeftValue() == board.getMostRightValue() || piece.getRightValue() == board.getMostRightValue())))
                     && board.getStartingPiece() != null) {
                 validMove = true;
             }
         }
-
         return validMove;
     }
 }

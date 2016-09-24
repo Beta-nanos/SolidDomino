@@ -1,5 +1,6 @@
 package soliddomino.game.managers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -14,7 +15,7 @@ public class ConsoleBoard implements Board {
 
     @Override
     public List<Piece> loadPieces(int maxValue) {
-        List<Piece> pieces = null;
+        List<Piece> pieces = new ArrayList<Piece>();
         for(int i = 0; i <= maxValue; i++){
             loadSubsetPieces(i, pieces);
         }
@@ -64,16 +65,26 @@ public class ConsoleBoard implements Board {
         if(getStartingPiece() == null)
             setStartingPiece(currentMove.getPiece());
         else{
-            Piece pieceToAddTo = getPieceToAddTo(currentMove.getDirection());
-            appendPiece(currentMove, pieceToAddTo);
+            Piece endPieceByDirection = getEndPieceByDirection(currentMove.getDirection());
+            appendToOldTailPiece(currentMove, endPieceByDirection);
         }
     }
     
-    public void appendPiece(Movement currentMove, Piece pieceToAddTo){
-        if(pieceToAddTo.getLeftPiece() == null)
-                pieceToAddTo.setLeftPiece(currentMove.getPiece());
-            else
-                pieceToAddTo.setRightPiece(currentMove.getPiece());
+    private void appendToOldTailPiece(Movement currentMove, Piece pieceToAddTo){
+        Piece newTailPiece = currentMove.getPiece();
+        appendToNewTailPiece(newTailPiece, pieceToAddTo);
+        if(pieceToAddTo.getLeftPiece() == null){
+            pieceToAddTo.setLeftPiece(newTailPiece);
+        }else{
+            pieceToAddTo.setRightPiece(newTailPiece);
+        }               
+    }
+    
+    private void appendToNewTailPiece(Piece newTailPiece, Piece oldTailPiece){
+        if(newTailPiece.getLeftValue() == oldTailPiece.getLeftValue() || newTailPiece.getLeftValue() == oldTailPiece.getRightValue())
+            newTailPiece.setLeftPiece(oldTailPiece);
+        else
+            newTailPiece.setRightPiece(oldTailPiece);
     }
     
     @Override
@@ -86,7 +97,7 @@ public class ConsoleBoard implements Board {
         return startingPiece;
     }
     
-    private Piece getPieceToAddTo(DIRECTION direction) {
+    private Piece getEndPieceByDirection(DIRECTION direction) {
         if(direction == DIRECTION.LEFT)
             return getMostLeftPiece(getStartingPiece());
         else
