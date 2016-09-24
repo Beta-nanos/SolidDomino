@@ -7,9 +7,11 @@ import soliddomino.game.components.Player;
 import soliddomino.game.movement.Turn;
 import soliddomino.game.movement.Movement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import soliddomino.game.exceptions.NoPiecesToTakeException;
+import soliddomino.game.managers.ConsoleBoard;
 
 public class Domino {
     private List<Piece> pieces;
@@ -20,6 +22,7 @@ public class Domino {
     private Turn turn;
     
     public Domino(){
+        board = new ConsoleBoard();
         pieces = board.loadPieces();
         board.shuffle(pieces);
         dealer = new Dealer(players);
@@ -27,7 +30,11 @@ public class Domino {
     
     public void init(){
         createPlayers(2);
-        dealer.distributePiecesToPlayers(pieces);
+        try {
+            dealer.distributePiecesToPlayers(pieces);
+        } catch (NoPiecesToTakeException ex) {
+            Logger.getLogger(Domino.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public String play(){
