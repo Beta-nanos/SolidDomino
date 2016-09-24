@@ -6,11 +6,11 @@ import soliddomino.game.dominos.ConsoleDomino;
 
 public class SolidDomino {
     public static void main(String[] args) {
-        Domino game = new ConsoleDomino();
         Scanner scan = new Scanner(System.in);
         String replayAnswer = "n";
         
         do {
+            Domino game = new ConsoleDomino();
             game.init();
             String winner = game.play();
             System.out.println(winner + " has won.");

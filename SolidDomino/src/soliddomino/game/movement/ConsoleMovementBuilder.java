@@ -53,7 +53,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
                 throw new IncorrectMoveFormatException(answer);
             }
             int index = Integer.parseInt(array[0]);
-            movement = buildMovement(index, array[1]);
+            movement = buildMovement(index - 1, array[1]);
         }
         return movement;
     }
@@ -62,7 +62,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     public Movement buildMovement(int index, String direction) throws WrongDirectionException {
         Movement movement = null;
         List<Piece> playerPieces = player.getPieces();
-        if (index > 0 && index <= playerPieces.size()) {
+        if (index >= 0 && index < playerPieces.size()) {
             movement = new Movement(playerPieces.get(index), 
                     buildDirection(direction));
             playerPieces.remove(index);
