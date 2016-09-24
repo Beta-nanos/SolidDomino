@@ -23,6 +23,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     public Movement generateMovement(Board board) {
         Movement movement = null;
         System.out.println("-----------------------------------------------");
+        ((ConsoleBoard)board).showCurrentTails();
         System.out.println(player.getName());
         ((ConsoleBoard)board).showPieces(player.getPieces());
         String message = "Which piece would you move in what direction?\nOptions:\n-Number of Piece - direction(e.g left, right)\n-Pass";

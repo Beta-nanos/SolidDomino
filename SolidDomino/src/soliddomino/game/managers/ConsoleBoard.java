@@ -142,7 +142,10 @@ public class ConsoleBoard implements Board {
     
     @Override
     public void showCurrentTails(){
-        System.out.println("Left tail: " + getMostLeftValue() + ", right tail: " + getMostRightValue());
+        if(getStartingPiece() == null)
+            System.out.println("No starting piece, yet");
+        else
+            System.out.println("Left tail: " + getMostLeftValue() + ", right tail: " + getMostRightValue());
     }
 
     @Override
