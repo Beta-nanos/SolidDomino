@@ -18,12 +18,13 @@ public abstract class Domino {
     private Board board;
     private ArrayList<Player> players;
     public static int PIECES_PER_PLAYER = 7;
+    public static int MAX_PIECE_VALUE = 6;
     private Dealer dealer;
     private Turn turn;
     
     public Domino(Board board, MovementBuilder movementBuilder){
         this.board = board;
-        pieces = board.loadPieces();
+        pieces = board.loadPieces(MAX_PIECE_VALUE);
         board.shuffle(pieces);
         dealer = new Dealer(players);
         dealer.setMovementBuilder(movementBuilder);
@@ -42,7 +43,7 @@ public abstract class Domino {
         Player currentPlayer = dealer.chooseStartingPlayer();
         do {
             getMovementFromPlayer(currentPlayer);
-            currentPlayer = dealer.nextPlayerTakingTurn();
+            currentPlayer = dealer.nextPlayerTakingTurn(currentPlayer);
         }while(!(turn.hasWon(currentPlayer)));
         return currentPlayer.getName();
     } 
