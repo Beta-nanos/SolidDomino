@@ -11,7 +11,7 @@ import soliddomino.game.movement.Movement;
 import soliddomino.game.exceptions.MaxNotBiggerThanMin;
 
 public class ConsoleBoard implements Board {
-    public Piece startingPiece = null;
+    private Piece startingPiece = null;
 
     @Override
     public List<Piece> loadPieces(int maxValue) {
@@ -136,7 +136,6 @@ public class ConsoleBoard implements Board {
         System.out.println("# - piece");
         for (int i = 0; i < pieces.size(); i++) {
             Piece tempPiece = pieces.get(i);
-            //System.out.printf(" - %d|%d\n", (i + 1), tempPiece.getLeftValue(), tempPiece.getRightValue());
             System.out.println("Piece " + (i+1) + ": " + tempPiece.getLeftValue() + "|" + tempPiece.getRightValue());
         }
     }
