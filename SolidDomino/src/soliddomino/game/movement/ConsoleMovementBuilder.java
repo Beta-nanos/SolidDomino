@@ -51,7 +51,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
                 throw new IncorrectMoveFormatException(answer);
             }
             int index = Integer.parseInt(array[0]);
-            movement = buildMovement(index, answer);
+            movement = buildMovement(index, array[1]);
         }
         return movement;
     }
