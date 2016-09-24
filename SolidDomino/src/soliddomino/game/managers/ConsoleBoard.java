@@ -30,4 +30,14 @@ public class ConsoleBoard implements Board {
         }
     }
 
+    @Override
+    public int getMostLeftValue() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getMostRightValue() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
