@@ -62,12 +62,4 @@ public class Player {
         comparePieces(pieces, highestPiece);
         return highestPiece;
     }    
-
-    private void printPieces() {
-        System.out.println("# - piece");
-        for(int i =0; i < pieces.size(); i ++){
-            Piece tempPiece = pieces.get(i);
-            System.out.printf(" - %d|%d\n", (i+1), tempPiece.getLeftValue(), tempPiece.getRightValue());
-        }
-    }
 }
