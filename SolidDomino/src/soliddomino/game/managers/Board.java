@@ -13,4 +13,5 @@ public interface Board {
     public int getMostRightValue();
     public void setStartingPiece(Piece piece);
     public Piece getStartingPiece();
+    public void showCurrentTails();
 }

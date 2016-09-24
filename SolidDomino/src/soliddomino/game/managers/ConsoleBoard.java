@@ -139,6 +139,11 @@ public class ConsoleBoard implements Board {
             System.out.println("Piece " + (i+1) + ": " + tempPiece.getLeftValue() + "|" + tempPiece.getRightValue());
         }
     }
+    
+    @Override
+    public void showCurrentTails(){
+        System.out.println("Left tail: " + getMostLeftValue() + ", right tail: " + getMostRightValue());
+    }
 
     @Override
     public int getMostLeftValue() {
