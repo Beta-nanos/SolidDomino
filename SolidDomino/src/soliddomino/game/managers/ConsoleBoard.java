@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import soliddomino.game.components.Piece;
+import soliddomino.game.components.Player;
 import soliddomino.game.movement.DIRECTION;
 import soliddomino.game.movement.Movement;
 import soliddomino.game.exceptions.MaxNotBiggerThanMin;
@@ -59,6 +60,15 @@ public class ConsoleBoard implements Board {
 	Random r = new Random();
 	return r.nextInt((max - min) + 1) + min;
 }
+    @Override
+    public void applyFirstMove(Player firstPlayer){
+        Piece thisIsStartingPiece = firstPlayer.getHighestPair();
+        if(firstPlayer.getHighestPair() == null){
+            thisIsStartingPiece = firstPlayer.getHighestPiece();
+        }
+        setStartingPiece(thisIsStartingPiece);
+        firstPlayer.getPieces().remove(thisIsStartingPiece);
+    }
 
     @Override
     public void applyMove(Movement currentMove) {

@@ -3,6 +3,7 @@ package soliddomino.game.managers;
 import soliddomino.game.components.Piece;
 import soliddomino.game.movement.Movement;
 import java.util.List;
+import soliddomino.game.components.Player;
 
 public interface Board {
     public List<Piece> loadPieces(int maxValue);
@@ -14,4 +15,5 @@ public interface Board {
     public void setStartingPiece(Piece piece);
     public Piece getStartingPiece();
     public void showCurrentTails();
+    public void applyFirstMove(Player firstPlayer);
 }
