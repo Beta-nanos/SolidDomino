@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
-import static soliddomino.game.main.Domino.PIECES_PER_PLAYER;
+import static soliddomino.game.dominos.Domino.PIECES_PER_PLAYER;
 import soliddomino.game.movement.MovementBuilder;
 
 public class Dealer {

@@ -9,4 +9,6 @@ public interface Board {
     public void shuffle(List<Piece> pieces);
     public void applyMove(Movement currentMove);
     public void showPieces(List<Piece> pieces);
+    public int getMostLeftValue();
+    public int getMostRightValue();
 }
