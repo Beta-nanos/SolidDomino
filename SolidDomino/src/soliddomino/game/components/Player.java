@@ -33,8 +33,11 @@ public class Player {
     public Piece getHighestPair() {
         List<Piece> pairs = new ArrayList<>();
         getPairs(pairs);
-        Piece highestPair = pairs.get(0);
-        highestPair = comparePieces(pairs, highestPair);
+        Piece highestPair = null;
+        if(!pairs.isEmpty()){
+            highestPair = pairs.get(0);
+            highestPair = comparePieces(pairs, highestPair);
+        }
         return highestPair;
     }
 

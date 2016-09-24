@@ -15,10 +15,11 @@ public class Turn {
         if (currentMove != null) {
             Piece piece = currentMove.getPiece();
             DIRECTION currentDirection = currentMove.getDirection();
-            if ((currentMove.isPass()
+            if ((board.getStartingPiece() == null && !currentMove.isPass())
+                    || (board.getStartingPiece() != null
+                    && (currentMove.isPass()
                     || (currentDirection == DIRECTION.LEFT && (piece.getLeftValue() == board.getMostLeftValue() || piece.getRightValue() == board.getMostLeftValue()))
-                    || (currentDirection == DIRECTION.RIGHT && (piece.getLeftValue() == board.getMostRightValue() || piece.getRightValue() == board.getMostRightValue())))
-                    && board.getStartingPiece() != null) {
+                    || (currentDirection == DIRECTION.RIGHT && (piece.getLeftValue() == board.getMostRightValue() || piece.getRightValue() == board.getMostRightValue()))))) {
                 validMove = true;
             }
         }

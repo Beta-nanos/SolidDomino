@@ -28,6 +28,7 @@ public abstract class Domino {
         board.shuffle(pieces);
         dealer = new Dealer(players);
         dealer.setMovementBuilder(movementBuilder);
+        this.turn  = new Turn();
     }
     
     public void init(){

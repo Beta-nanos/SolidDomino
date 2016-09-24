@@ -20,6 +20,7 @@ public class Dealer {
             
     public Dealer(ArrayList<Player> players){
         this.players =players;
+        this.turn = new Turn();
     }
     
     public void setMovementBuilder(MovementBuilder movementBuilder){
@@ -61,7 +62,10 @@ public class Dealer {
     
     private void fillHighestPair(HashMap<Player, Piece> playerPieces){
         for(Player player : players){
-            playerPieces.put(player, player.getHighestPair());
+            Piece highestPair = player.getHighestPair();
+            if(highestPair != null){
+                playerPieces.put(player, highestPair);
+            }
             playerPieces.remove(player, null);
         }
     }
