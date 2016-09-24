@@ -33,16 +33,19 @@ public class Domino {
     public String play(){
         Player currentPlayer = dealer.chooseStartingPlayer();
         do {
-            Movement currentMove = dealer.getPlayerMovement(currentPlayer, board);
-            if(currentMove.isPassed())
-                dealer.agregatePieceToPlayer(currentPlayer, pieces);
-            else
-                board.applyMove(currentMove);
-            
+            getMovementFromPlayer(currentPlayer);
             currentPlayer = dealer.nextPlayerTakingTurn();
         }while(!(turn.HasWon(currentPlayer)));
         return currentPlayer.getName();
     } 
+
+    private void getMovementFromPlayer(Player currentPlayer) {
+        Movement currentMove = dealer.getPlayerMovement(currentPlayer, board);
+        if(currentMove.isPassed())
+            dealer.addPieceToPlayer(currentPlayer, pieces);
+        else
+            board.applyMove(currentMove);
+    }
     
     private void createPlayers(int numberOfPlayers) {
         for(int i = 1; i <= numberOfPlayers; i++)
