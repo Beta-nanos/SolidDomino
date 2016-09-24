@@ -2,9 +2,12 @@ package soliddomino.game.managers;
 
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import soliddomino.game.components.Piece;
 import soliddomino.game.movement.DIRECTION;
 import soliddomino.game.movement.Movement;
+import soliddomino.game.exceptions.MaxNotBiggerThanMin;
 
 public class ConsoleBoard implements Board {
     public Piece startingPiece = null;
@@ -18,10 +21,10 @@ public class ConsoleBoard implements Board {
         return pieces;
     }
     
-    public void loadSubsetPieces(int currentIndex, List<Piece> pieces){
-        for(int u = 0; u <= currentIndex; u++){
-                pieces.add(new Piece(currentIndex,u));
-            }
+    public void loadSubsetPieces(int currentIndex, List<Piece> pieces) {
+        for (int u = 0; u <= currentIndex; u++) {
+            pieces.add(new Piece(currentIndex, u));
+        }
     }
     
     @Override
@@ -32,17 +35,24 @@ public class ConsoleBoard implements Board {
     }
     
     private void switchWithRandomPosition(int indexToChange, List<Piece> pieces) {
-        int indexToChangeWith = getRandomNumberInRange(0, pieces.size()-1);
+        int indexToChangeWith =indexToChange;
+        try{
+            indexToChangeWith = getRandomNumberInRange(0, pieces.size()-1);
+        }catch(MaxNotBiggerThanMin ex){
+            Logger.getLogger(Dealer.class.getName()).log(Level.WARNING, null, ex);
+            System.out.println(ex.getMessage());
+        }
+        
         Piece currentPiece = pieces.get(indexToChange);
         Piece changeWithThisPiece = pieces.get(indexToChangeWith);
         pieces.set(indexToChangeWith, currentPiece);
         pieces.set(indexToChange, changeWithThisPiece);
     }
     
-    private static int getRandomNumberInRange(int min, int max) {
+    private static int getRandomNumberInRange(int min, int max) throws MaxNotBiggerThanMin {
 
 	if (min >= max) {
-		throw new IllegalArgumentException("Max must be greater than min");
+		throw new MaxNotBiggerThanMin();
 	}
 
 	Random r = new Random();
@@ -55,11 +65,11 @@ public class ConsoleBoard implements Board {
             setStartingPiece(currentMove.getPiece());
         else{
             Piece pieceToAddTo = getPieceToAddTo(currentMove.getDirection());
-            apendPiece(currentMove, pieceToAddTo);
+            appendPiece(currentMove, pieceToAddTo);
         }
     }
     
-    public void apendPiece(Movement currentMove, Piece pieceToAddTo){
+    public void appendPiece(Movement currentMove, Piece pieceToAddTo){
         if(pieceToAddTo.getLeftPiece() == null)
                 pieceToAddTo.setLeftPiece(currentMove.getPiece());
             else
@@ -84,19 +94,21 @@ public class ConsoleBoard implements Board {
     }
     
     private Piece getMostLeftPiece(Piece currentPiece) {
-        if(currentPiece == getStartingPiece() && currentPiece.getLeftPiece() != null)
+        Piece currentStartingPiece = getStartingPiece();
+        if(currentPiece == currentStartingPiece && currentPiece.getLeftPiece() != null)
             return getMostLeftPiece(currentPiece.getLeftPiece());
-        if(currentPiece == getStartingPiece() && currentPiece.getLeftPiece() == null)
+        if(currentPiece == currentStartingPiece && currentPiece.getLeftPiece() == null)
             return currentPiece;
-        return getLastPiece(currentPiece, getStartingPiece());
+        return getLastPiece(currentPiece, currentStartingPiece);
     }
 
     private Piece getMostRightPiece(Piece currentPiece) {
-        if(currentPiece == getStartingPiece() && currentPiece.getRightPiece() != null)
+        Piece currentStartingPiece = getStartingPiece();
+        if(currentPiece == currentStartingPiece && currentPiece.getRightPiece() != null)
             return getMostRightPiece(currentPiece.getRightPiece());
-        if(currentPiece == getStartingPiece() && currentPiece.getRightPiece() == null)
+        if(currentPiece == currentStartingPiece && currentPiece.getRightPiece() == null)
             return currentPiece;
-        return getLastPiece(currentPiece, getStartingPiece());
+        return getLastPiece(currentPiece, currentStartingPiece);
     }
     
     private Piece getLastPiece(Piece currentPiece, Piece previousPiece){
@@ -119,17 +131,19 @@ public class ConsoleBoard implements Board {
 
     @Override
     public int getMostLeftValue() {
-        if(getStartingPiece().getLeftPiece() == null)
-            return getStartingPiece().getLeftValue();
-        Piece currentPiece = getMostLeftPiece(getStartingPiece());
+        Piece currentStartingPiece = getStartingPiece();
+        if(currentStartingPiece.getLeftPiece() == null)
+            return currentStartingPiece.getLeftValue();
+        Piece currentPiece = getMostLeftPiece(currentStartingPiece);
         return getFreeValue(currentPiece);
     }
 
     @Override
     public int getMostRightValue() {
-        if(getStartingPiece().getRightPiece() == null)
-            return getStartingPiece().getRightValue();
-        Piece currentPiece = getMostRightPiece(getStartingPiece());
+        Piece currentStartingPiece = getStartingPiece();
+        if(currentStartingPiece.getRightPiece() == null)
+            return currentStartingPiece.getRightValue();
+        Piece currentPiece = getMostRightPiece(currentStartingPiece);
         return getFreeValue(currentPiece);
     }
     
