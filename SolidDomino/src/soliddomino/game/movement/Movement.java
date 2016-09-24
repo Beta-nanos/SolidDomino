@@ -17,9 +17,13 @@ public class Movement {
     private DIRECTION direction;
     private boolean pass;
     
-    Movement(Piece piece, DIRECTION direction, boolean pass){
+    public Movement(Piece piece, DIRECTION direction){
         this.piece = piece;
         this.direction = direction;
+        this.pass = false;
+    }
+
+    public Movement(boolean pass) {
         this.pass = pass;
     }
     

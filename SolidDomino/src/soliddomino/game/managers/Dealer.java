@@ -7,6 +7,9 @@ import soliddomino.game.movement.Movement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import soliddomino.game.exceptions.NoPiecesToTakeException;
 import static soliddomino.game.main.Domino.PIECES_PER_PLAYER;
 
 public class Dealer {
@@ -21,7 +24,7 @@ public class Dealer {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void distributePiecesToPlayers(List<Piece> pieces) {
+    public void distributePiecesToPlayers(List<Piece> pieces) throws NoPiecesToTakeException {
         for(Player player : players)
             player.takePieces(PIECES_PER_PLAYER, pieces);        
     }
@@ -69,7 +72,13 @@ public class Dealer {
         return playerList.get(index);
     }
 
-    public void agregatePieceToPlayer(Player currentPlayer, List<Piece> pieces) {
-        currentPlayer.takePieces(1, pieces);   
+    public void addPieceToPlayer(Player currentPlayer, List<Piece> pieces) {
+        try {   
+            currentPlayer.takePieces(1, pieces);
+        } catch (NoPiecesToTakeException ex) {
+            Logger.getLogger(Dealer.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
+        }
+    
     }
 }
