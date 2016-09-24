@@ -26,8 +26,12 @@ public class Dealer {
         this.movementBuilder = movementBuilder;
     }
     
-    public Player nextPlayerTakingTurn() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Player nextPlayerTakingTurn(Player currentPlayer) {
+        int indexCurrentPlayer = players.indexOf(currentPlayer);
+        if(indexCurrentPlayer == players.size()-1)
+            return players.get(0);
+        else
+            return players.get(indexCurrentPlayer + 1);
     }
     
     public void distributePiecesToPlayers(List<Piece> pieces) throws NoPiecesToTakeException {
