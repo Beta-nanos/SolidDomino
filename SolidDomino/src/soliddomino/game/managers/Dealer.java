@@ -11,13 +11,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import static soliddomino.game.main.Domino.PIECES_PER_PLAYER;
+import soliddomino.game.movement.MovementBuilder;
 
 public class Dealer {
     private ArrayList<Player> players;
     private Turn turn;
-    
+    private MovementBuilder movementBuilder;
+            
     public Dealer(ArrayList<Player> players){
         this.players =players;
+    }
+    
+    public void setMovementBuilder(MovementBuilder movementBuilder){
+        this.movementBuilder = movementBuilder;
     }
     
     public Player nextPlayerTakingTurn() {
@@ -43,7 +49,8 @@ public class Dealer {
     public Movement getPlayerMovement(Player player, Board board){
         Movement currentMove = null;
         do{
-            currentMove = player.move();
+            movementBuilder.setPlayer(player);
+            currentMove = movementBuilder.generateMovement(board);
         }while(!(turn.validateMove(currentMove, board)));
         return currentMove;
     }

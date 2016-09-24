@@ -14,6 +14,7 @@ import soliddomino.game.managers.ConsoleBoard;
 public class ConsoleMovementBuilder implements MovementBuilder{
     private Player player;
     
+    @Override
     public void setPlayer(Player player){
         this.player = player;
     }
