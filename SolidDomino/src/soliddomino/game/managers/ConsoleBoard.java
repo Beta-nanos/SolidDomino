@@ -32,7 +32,7 @@ public class ConsoleBoard implements Board {
     }
     
     private void switchWithRandomPosition(int indexToChange, List<Piece> pieces) {
-        int indexToChangeWith = getRandomNumberInRange(0, pieces.size());
+        int indexToChangeWith = getRandomNumberInRange(0, pieces.size()-1);
         Piece currentPiece = pieces.get(indexToChange);
         Piece changeWithThisPiece = pieces.get(indexToChangeWith);
         pieces.set(indexToChangeWith, currentPiece);
@@ -55,11 +55,15 @@ public class ConsoleBoard implements Board {
             setStartingPiece(currentMove.getPiece());
         else{
             Piece pieceToAddTo = getPieceToAddTo(currentMove.getDirection());
-            if(pieceToAddTo.getLeftPiece() == null)
+            apendPiece(currentMove, pieceToAddTo);
+        }
+    }
+    
+    public void apendPiece(Movement currentMove, Piece pieceToAddTo){
+        if(pieceToAddTo.getLeftPiece() == null)
                 pieceToAddTo.setLeftPiece(currentMove.getPiece());
             else
                 pieceToAddTo.setRightPiece(currentMove.getPiece());
-        }
     }
     
     @Override
