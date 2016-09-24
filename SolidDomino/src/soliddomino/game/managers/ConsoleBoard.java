@@ -136,7 +136,8 @@ public class ConsoleBoard implements Board {
         System.out.println("# - piece");
         for (int i = 0; i < pieces.size(); i++) {
             Piece tempPiece = pieces.get(i);
-            System.out.printf(" - %d|%d\n", (i + 1), tempPiece.getLeftValue(), tempPiece.getRightValue());
+            //System.out.printf(" - %d|%d\n", (i + 1), tempPiece.getLeftValue(), tempPiece.getRightValue());
+            System.out.println("Piece " + (i+1) + ": " + tempPiece.getLeftValue() + "|" + tempPiece.getRightValue());
         }
     }
 

@@ -14,7 +14,7 @@ import static soliddomino.game.dominos.Domino.PIECES_PER_PLAYER;
 import soliddomino.game.movement.MovementBuilder;
 
 public class Dealer {
-    private ArrayList<Player> players;
+    private ArrayList<Player> players = new ArrayList<Player>();
     private Turn turn;
     private MovementBuilder movementBuilder;
             

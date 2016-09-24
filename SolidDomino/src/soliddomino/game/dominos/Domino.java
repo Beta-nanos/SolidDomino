@@ -16,7 +16,7 @@ import soliddomino.game.movement.MovementBuilder;
 public abstract class Domino {
     private List<Piece> pieces;
     private Board board;
-    private ArrayList<Player> players;
+    private ArrayList<Player> players = new ArrayList<Player>();;
     public static int PIECES_PER_PLAYER = 7;
     public static int MAX_PIECE_VALUE = 6;
     private Dealer dealer;
