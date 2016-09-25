@@ -2,8 +2,6 @@ package soliddomino.game.movement;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.exceptions.IncorrectMoveFormatException;
@@ -31,8 +29,8 @@ public class ConsoleMovementBuilder implements MovementBuilder{
         try {
             movement = answerValidation(answer);
         } catch (IncorrectMoveFormatException | NumberFormatException | WrongDirectionException ex) {
-            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
+            movement = generateMovement(board);
         }
         return movement;
     }
@@ -46,13 +44,13 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     @Override
     public Movement answerValidation(String answer) throws IncorrectMoveFormatException, NumberFormatException, WrongDirectionException {
         Movement movement = null;
-        if (answer.equalsIgnoreCase("pass")) {
+        if (answer.equalsIgnoreCase("pass") || answer.toLowerCase().charAt(0) == 'p') {
             movement = new Movement(true);
         } else {
             String[] array = answer.split("-");
-            if (array.length < 2) {
+            if (array.length < 2)
                 throw new IncorrectMoveFormatException(answer);
-            }
+            
             int index = Integer.parseInt(array[0]);
             movement = buildMovement(index - 1, array[1]);
         }
