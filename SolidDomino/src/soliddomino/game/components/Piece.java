@@ -7,6 +7,8 @@ public class Piece {
     public Piece(int lvalue, int rvalue){
         leftValue = lvalue;
         rightValue = rvalue;
+        leftPiece = null;
+        rightPiece = null;
     }
     
     public int getSumOfValues() {
@@ -36,7 +38,13 @@ public class Piece {
     public Piece getRightPiece() {
         return rightPiece;
     }
-
+    
+    public void invertValues(){
+        int temp = this.leftValue;
+        this.leftValue = this.rightValue;
+        this.rightValue = temp;
+    }
+    
     public void setRightPiece(Piece rightPiece) {
         this.rightPiece = rightPiece;
     }

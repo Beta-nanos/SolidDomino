@@ -22,8 +22,11 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     @Override
     public Movement generateMovement(Board board) {
         Movement movement = null;
+        System.out.println("-----------------------------------------------");
+        ((ConsoleBoard)board).showCurrentTails();
+        System.out.println("Turn goes for: " + player.getName());
         ((ConsoleBoard)board).showPieces(player.getPieces());
-        String message = "Which piece would you move in what direction?\nOptions:\n-Number of Piece - direction(e.g left, right)\n-Pass";
+        String message = "Which piece would you move in what direction?\nOptions:\n-Number of Piece-direction(e.g left, right)\n-Pass";
         String answer = questionAndGetAnswer(message);
         try {
             movement = answerValidation(answer);
@@ -51,7 +54,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
                 throw new IncorrectMoveFormatException(answer);
             }
             int index = Integer.parseInt(array[0]);
-            movement = buildMovement(index, answer);
+            movement = buildMovement(index - 1, array[1]);
         }
         return movement;
     }
@@ -60,7 +63,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     public Movement buildMovement(int index, String direction) throws WrongDirectionException {
         Movement movement = null;
         List<Piece> playerPieces = player.getPieces();
-        if (index > 0 && index <= playerPieces.size()) {
+        if (index >= 0 && index < playerPieces.size()) {
             movement = new Movement(playerPieces.get(index), 
                     buildDirection(direction));
             playerPieces.remove(index);

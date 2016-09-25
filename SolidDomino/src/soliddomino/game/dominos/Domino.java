@@ -16,17 +16,19 @@ import soliddomino.game.movement.MovementBuilder;
 public abstract class Domino {
     private List<Piece> pieces;
     private Board board;
-    private ArrayList<Player> players;
+    private ArrayList<Player> players = new ArrayList<Player>();;
     public static int PIECES_PER_PLAYER = 7;
+    public static int MAX_PIECE_VALUE = 6;
     private Dealer dealer;
     private Turn turn;
     
     public Domino(Board board, MovementBuilder movementBuilder){
         this.board = board;
-        pieces = board.loadPieces();
+        pieces = board.loadPieces(MAX_PIECE_VALUE);
         board.shuffle(pieces);
         dealer = new Dealer(players);
         dealer.setMovementBuilder(movementBuilder);
+        this.turn  = new Turn();
     }
     
     public void init(){
@@ -40,9 +42,10 @@ public abstract class Domino {
     
     public String play(){
         Player currentPlayer = dealer.chooseStartingPlayer();
+        board.applyFirstMove(currentPlayer);
         do {
+            currentPlayer = dealer.nextPlayerTakingTurn(currentPlayer);
             getMovementFromPlayer(currentPlayer);
-            currentPlayer = dealer.nextPlayerTakingTurn();
         }while(!(turn.hasWon(currentPlayer)));
         return currentPlayer.getName();
     } 

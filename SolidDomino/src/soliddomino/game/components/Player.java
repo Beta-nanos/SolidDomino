@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Player {
     private final String name;
-    private List<Piece> pieces;
+    private List<Piece> pieces = new ArrayList<>();
     
     public Player(String name) {
         this.name =  name;
@@ -18,6 +18,10 @@ public class Player {
     
     public List<Piece> getPieces(){
         return this.pieces;
+    }
+    
+    public void getLastUsedPiece(Piece piece){
+        pieces.add(piece);
     }
     
     public void takePieces(int piecesToTake, List<Piece> pieces) throws NoPiecesToTakeException {
@@ -33,8 +37,11 @@ public class Player {
     public Piece getHighestPair() {
         List<Piece> pairs = new ArrayList<>();
         getPairs(pairs);
-        Piece highestPair = pairs.get(0);
-        highestPair = comparePieces(pairs, highestPair);
+        Piece highestPair = null;
+        if(!pairs.isEmpty()){
+            highestPair = pairs.get(0);
+            highestPair = comparePieces(pairs, highestPair);
+        }
         return highestPair;
     }
 
