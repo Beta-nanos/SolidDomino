@@ -11,15 +11,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import static soliddomino.game.dominos.Domino.PIECES_PER_PLAYER;
+import soliddomino.game.exceptions.InvalidPiecePairingException;
 import soliddomino.game.movement.MovementBuilder;
 
 public class Dealer {
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private List<Player> players = new ArrayList<>();
     private Turn turn;
+    private List<Piece> usedPieces = new ArrayList<>();
     private MovementBuilder movementBuilder;
             
     public Dealer(ArrayList<Player> players){
-        this.players =players;
+        this.players = players;
         this.turn = new Turn();
     }
     
@@ -41,7 +43,7 @@ public class Dealer {
     }
 
     public Player chooseStartingPlayer() {
-        HashMap<Player, Piece> playerPieces = new HashMap<Player, Piece>();
+        HashMap<Player, Piece> playerPieces = new HashMap<>();
         fillHighestPair(playerPieces);
         
         if(playerPieces.isEmpty()){
@@ -53,11 +55,29 @@ public class Dealer {
     
     public Movement getPlayerMovement(Player player, Board board){
         Movement currentMove = null;
+        try {
+            currentMove = buildingMovement(player, currentMove, board);
+        } catch (InvalidPiecePairingException ex) {
+            System.out.println(ex.getMessage());
+            pieceRollback(player);
+            currentMove = getPlayerMovement(player, board);
+        }
+        return currentMove;
+    }
+
+    private Movement buildingMovement(Player player, Movement currentMove, Board board) throws InvalidPiecePairingException {
         do{
             movementBuilder.setPlayer(player);
             currentMove = movementBuilder.generateMovement(board);
+            usedPieces.add(currentMove.getPiece());
         }while(!(turn.validateMove(currentMove, board)));
         return currentMove;
+    }
+
+    private void pieceRollback(Player player) {
+        int lastUsedPieceIndex = usedPieces.size() - 1;
+        player.getLastUsedPiece(usedPieces.get(lastUsedPieceIndex));
+        usedPieces.remove(lastUsedPieceIndex);
     }
     
     private void fillHighestPair(HashMap<Player, Piece> playerPieces){

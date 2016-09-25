@@ -12,172 +12,161 @@ import soliddomino.game.movement.Movement;
 import soliddomino.game.exceptions.MaxNotBiggerThanMin;
 
 public class ConsoleBoard implements Board {
+
     private Piece startingPiece = null;
-
-    @Override
-    public List<Piece> loadPieces(int maxValue) {
-        List<Piece> pieces = new ArrayList<Piece>();
-        for(int i = 0; i <= maxValue; i++){
-            loadSubsetPieces(i, pieces);
-        }
-        return pieces;
-    }
-    
-    public void loadSubsetPieces(int currentIndex, List<Piece> pieces) {
-        for (int u = 0; u <= currentIndex; u++) {
-            pieces.add(new Piece(currentIndex, u));
-        }
-    }
-    
-    @Override
-    public void shuffle(List<Piece> pieces) {
-        for(int i = 0; i < pieces.size(); i++){
-            switchWithRandomPosition(i,pieces);
-        }
-    }
-    
-    private void switchWithRandomPosition(int indexToChange, List<Piece> pieces) {
-        int indexToChangeWith =indexToChange;
-        try{
-            indexToChangeWith = getRandomNumberInRange(0, pieces.size()-1);
-        }catch(MaxNotBiggerThanMin ex){
-            Logger.getLogger(Dealer.class.getName()).log(Level.WARNING, null, ex);
-            System.out.println(ex.getMessage());
-        }
-        
-        Piece currentPiece = pieces.get(indexToChange);
-        Piece changeWithThisPiece = pieces.get(indexToChangeWith);
-        pieces.set(indexToChangeWith, currentPiece);
-        pieces.set(indexToChange, changeWithThisPiece);
-    }
-    
-    private static int getRandomNumberInRange(int min, int max) throws MaxNotBiggerThanMin {
-
-	if (min >= max) {
-		throw new MaxNotBiggerThanMin();
-	}
-
-	Random r = new Random();
-	return r.nextInt((max - min) + 1) + min;
-}
-    @Override
-    public void applyFirstMove(Player firstPlayer){
-        Piece thisIsStartingPiece = firstPlayer.getHighestPair();
-        if(firstPlayer.getHighestPair() == null){
-            thisIsStartingPiece = firstPlayer.getHighestPiece();
-        }
-        setStartingPiece(thisIsStartingPiece);
-        firstPlayer.getPieces().remove(thisIsStartingPiece);
-    }
-
-    @Override
-    public void applyMove(Movement currentMove) {
-        if(getStartingPiece() == null)
-            setStartingPiece(currentMove.getPiece());
-        else{
-            Piece endPieceByDirection = getEndPieceByDirection(currentMove.getDirection());
-            appendToOldTailPiece(currentMove, endPieceByDirection);
-        }
-    }
-    
-    private void appendToOldTailPiece(Movement currentMove, Piece pieceToAddTo){
-        Piece newTailPiece = currentMove.getPiece();
-        appendToNewTailPiece(newTailPiece, pieceToAddTo);
-        if(pieceToAddTo.getLeftPiece() == null){
-            pieceToAddTo.setLeftPiece(newTailPiece);
-        }else{
-            pieceToAddTo.setRightPiece(newTailPiece);
-        }               
-    }
-    
-    private void appendToNewTailPiece(Piece newTailPiece, Piece oldTailPiece){
-        if(newTailPiece.getLeftValue() == oldTailPiece.getLeftValue() || newTailPiece.getLeftValue() == oldTailPiece.getRightValue())
-            newTailPiece.setLeftPiece(oldTailPiece);
-        else
-            newTailPiece.setRightPiece(oldTailPiece);
-    }
     
     @Override
     public void setStartingPiece(Piece piece) {
-        startingPiece = piece;
+        if(startingPiece == null)
+            startingPiece = piece;
     }
-    
+
     @Override
     public Piece getStartingPiece() {
         return startingPiece;
     }
     
-    private Piece getEndPieceByDirection(DIRECTION direction) {
-        if(direction == DIRECTION.LEFT)
-            return getMostLeftPiece(getStartingPiece());
-        else
-            return getMostRightPiece(getStartingPiece());
-    }
-    
-    private Piece getMostLeftPiece(Piece currentPiece) {
-        Piece currentStartingPiece = getStartingPiece();
-        if(currentPiece == currentStartingPiece && currentPiece.getLeftPiece() != null)
-            return getMostLeftPiece(currentPiece.getLeftPiece());
-        if(currentPiece == currentStartingPiece && currentPiece.getLeftPiece() == null)
-            return currentPiece;
-        return getLastPiece(currentPiece, currentStartingPiece);
+    @Override
+    public List<Piece> loadPieces(int maxValue) {
+        System.out.println("Welcome to Domino Remix 20-16!");
+        List<Piece> pieces = new ArrayList<>();
+        for (int i = 0; i <= maxValue; i++)
+            loadSubsetPieces(i, pieces);
+        return pieces;
     }
 
-    private Piece getMostRightPiece(Piece currentPiece) {
-        Piece currentStartingPiece = getStartingPiece();
-        if(currentPiece == currentStartingPiece && currentPiece.getRightPiece() != null)
-            return getMostRightPiece(currentPiece.getRightPiece());
-        if(currentPiece == currentStartingPiece && currentPiece.getRightPiece() == null)
-            return currentPiece;
-        return getLastPiece(currentPiece, currentStartingPiece);
+    public void loadSubsetPieces(int currentIndex, List<Piece> pieces) {
+        for (int u = 0; u <= currentIndex; u++)
+            pieces.add(new Piece(currentIndex, u));
     }
-    
-    private Piece getLastPiece(Piece currentPiece, Piece previousPiece){
-        if(currentPiece.getLeftPiece() == null || currentPiece.getRightPiece() == null)
+
+    @Override
+    public void shuffle(List<Piece> pieces) {
+        System.out.println("Shuffling pieces...");
+        for (int i = 0; i < pieces.size(); i++)
+            switchWithRandomPosition(i, pieces);        
+    }
+
+    private void switchWithRandomPosition(int indexToChange, List<Piece> pieces) {
+        int indexToChangeWith = indexToChange;
+        try {
+            indexToChangeWith = getRandomNumberInRange(0, pieces.size() - 1);
+        } catch (MaxNotBiggerThanMin ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        Piece currentPiece = pieces.get(indexToChange);
+        Piece changeWithThisPiece = pieces.get(indexToChangeWith);
+        pieces.set(indexToChangeWith, currentPiece);
+        pieces.set(indexToChange, changeWithThisPiece);
+    }
+
+    private static int getRandomNumberInRange(int min, int max) throws MaxNotBiggerThanMin {
+        if (min >= max) 
+            throw new MaxNotBiggerThanMin();
+        
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
+    @Override
+    public void applyFirstMove(Player firstPlayer) {
+        System.out.println("Turn goes for " + firstPlayer.getName());
+        Piece gameStartingPiece = firstPlayer.getHighestPair();
+        if (firstPlayer.getHighestPair() == null)
+            gameStartingPiece = firstPlayer.getHighestPiece();
+        
+        setStartingPiece(gameStartingPiece);
+        firstPlayer.getPieces().remove(gameStartingPiece);
+    }
+
+    @Override
+    public void applyMove(Movement currentMove) {
+        if (getStartingPiece() == null)
+            setStartingPiece(currentMove.getPiece());
+        else {
+            Piece endingPiece = getEndPieceByDirection(currentMove.getDirection());
+            appendToNewAndOldTailPieces(currentMove, endingPiece);
+        }
+    }
+
+    private void appendToNewAndOldTailPieces(Movement currrentMovement, Piece oldTailPiece) {
+        Piece newTailPiece = currrentMovement.getPiece();
+        if (currrentMovement.getDirection() == DIRECTION.LEFT){
+            if(oldTailPiece.getLeftValue() == newTailPiece.getLeftValue())
+                newTailPiece.invertValues();
+            oldTailPiece.setLeftPiece(newTailPiece);
+            newTailPiece.setRightPiece(oldTailPiece);
+        }
+        else{
+            if(oldTailPiece.getRightValue()== newTailPiece.getRightValue())
+                newTailPiece.invertValues();
+            oldTailPiece.setRightPiece(newTailPiece);
+            newTailPiece.setLeftPiece(oldTailPiece);
+        }
+    }
+
+    private Piece getEndPieceByDirection(DIRECTION direction) {
+        if (direction == DIRECTION.LEFT) {
+            return getLeftmostPiece(getStartingPiece());
+        } else {
+            return getRightmostPiece(getStartingPiece());
+        }
+    }
+
+    private Piece getLeftmostPiece(Piece currentPiece) {
+        if(currentPiece.getLeftPiece() == null)
             return currentPiece;
-        if(currentPiece.getLeftPiece() == previousPiece)
-            return getLastPiece(currentPiece.getRightPiece(), currentPiece);
-        else
-            return getLastPiece(currentPiece.getLeftPiece(), currentPiece);
+        
+        return getLeftmostPiece(currentPiece.getLeftPiece());
+    }
+
+    private Piece getRightmostPiece(Piece currentPiece) {
+        if(currentPiece.getRightPiece() == null)
+            return currentPiece;
+        
+        return getRightmostPiece(currentPiece.getRightPiece());
     }
 
     @Override
     public void showPieces(List<Piece> pieces) {
-        System.out.println("# - piece");
+        System.out.println("Piece #: left Value|right Value");
         for (int i = 0; i < pieces.size(); i++) {
             Piece tempPiece = pieces.get(i);
-            System.out.println("Piece " + (i+1) + ": " + tempPiece.getLeftValue() + "|" + tempPiece.getRightValue());
+            System.out.println("Piece " + (i + 1) + ": " + tempPiece.getLeftValue() + "|" + tempPiece.getRightValue());
         }
     }
-    
+
     @Override
-    public void showCurrentTails(){
-        if(getStartingPiece() == null)
+    public void showCurrentTails() {
+        if (getStartingPiece() == null)
             System.out.println("No starting piece, yet");
-        else
-            System.out.println("Left tail: " + getMostLeftValue() + ", right tail: " + getMostRightValue());
+        else 
+            System.out.println("Left tail: " + getLeftmostValue() + ", right tail: " + getRightmostValue());
     }
 
     @Override
-    public int getMostLeftValue() {
+    public int getLeftmostValue() {
         Piece currentStartingPiece = getStartingPiece();
-        if(currentStartingPiece.getLeftPiece() == null)
-            return currentStartingPiece.getLeftValue();
-        Piece currentPiece = getMostLeftPiece(currentStartingPiece);
+        if (currentStartingPiece.getLeftPiece() == null)
+            return getFreeValue(currentStartingPiece);
+        
+        Piece currentPiece = getLeftmostPiece(currentStartingPiece);
         return getFreeValue(currentPiece);
     }
 
     @Override
-    public int getMostRightValue() {
+    public int getRightmostValue() {
         Piece currentStartingPiece = getStartingPiece();
-        if(currentStartingPiece.getRightPiece() == null)
-            return currentStartingPiece.getRightValue();
-        Piece currentPiece = getMostRightPiece(currentStartingPiece);
+        if (currentStartingPiece.getRightPiece() == null)
+            return getFreeValue(currentStartingPiece);
+        
+        Piece currentPiece = getRightmostPiece(currentStartingPiece);
         return getFreeValue(currentPiece);
     }
-    
-    public int getFreeValue(Piece piece){
-        if(piece.getLeftPiece() == null)
+
+    public int getFreeValue(Piece piece) {
+        if (piece.getLeftPiece() == null)
             return piece.getLeftValue();
         else
             return piece.getRightValue();

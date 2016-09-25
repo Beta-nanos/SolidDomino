@@ -24,9 +24,9 @@ public class ConsoleMovementBuilder implements MovementBuilder{
         Movement movement = null;
         System.out.println("-----------------------------------------------");
         ((ConsoleBoard)board).showCurrentTails();
-        System.out.println(player.getName());
+        System.out.println("Turn goes for: " + player.getName());
         ((ConsoleBoard)board).showPieces(player.getPieces());
-        String message = "Which piece would you move in what direction?\nOptions:\n-Number of Piece - direction(e.g left, right)\n-Pass";
+        String message = "Which piece would you move in what direction?\nOptions:\n-Number of Piece-direction(e.g left, right)\n-Pass";
         String answer = questionAndGetAnswer(message);
         try {
             movement = answerValidation(answer);
