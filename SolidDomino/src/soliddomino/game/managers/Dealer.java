@@ -20,7 +20,7 @@ public class Dealer {
     private List<Piece> usedPieces = new ArrayList<>();
     private MovementBuilder movementBuilder;
             
-    public Dealer(ArrayList<Player> players){
+    public Dealer(List<Player> players){
         this.players = players;
         this.turn = new Turn();
     }
@@ -111,7 +111,6 @@ public class Dealer {
         try {   
             currentPlayer.takePieces(1, pieces);
         } catch (NoPiecesToTakeException ex) {
-            Logger.getLogger(Dealer.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getMessage());
         }
     

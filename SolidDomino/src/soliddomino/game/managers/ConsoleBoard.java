@@ -71,7 +71,7 @@ public class ConsoleBoard implements Board {
 
     @Override
     public void applyFirstMove(Player firstPlayer) {
-        System.out.println("Turn goes for " + firstPlayer.getName());
+        System.out.println((char)27 + "[1m Turn goes for: " + firstPlayer.getName() + (char)27 + "[0m");
         Piece gameStartingPiece = firstPlayer.getHighestPair();
         if (firstPlayer.getHighestPair() == null)
             gameStartingPiece = firstPlayer.getHighestPiece();
