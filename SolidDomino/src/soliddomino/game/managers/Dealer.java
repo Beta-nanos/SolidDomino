@@ -60,8 +60,6 @@ public class Dealer {
         Movement currentMove = null;
         try {
             currentMove = buildingMovement(player, currentMove, board);
-            System.out.println("printing piece chain");
-            ((ConsoleBoard)board).showPieceChain(usedPieces.get(0));
         } catch (InvalidPiecePairingException ex) {
             System.out.println(ex.getMessage());
             pieceRollback(player);
