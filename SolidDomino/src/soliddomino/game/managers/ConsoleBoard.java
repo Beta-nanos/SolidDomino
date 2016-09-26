@@ -15,6 +15,7 @@ public class ConsoleBoard implements Board {
         pieceChain = new PieceChain();
     }    
     
+    @Override
     public PieceChain getPieceChain(){
         return pieceChain;
     }
