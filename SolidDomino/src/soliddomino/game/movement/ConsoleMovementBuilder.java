@@ -22,6 +22,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     public Movement generateMovement(Board board) {
         Movement movement = null;
         System.out.println("-----------------------------------------------");
+        ((ConsoleBoard)board).showPieceChain(((ConsoleBoard)board).getPieceChain().getStartingPiece());
         ((ConsoleBoard)board).showCurrentTails();
         System.out.println((char)27 + "[1m Turn goes for: " + player.getName() + (char)27 + "[0m");
         ((ConsoleBoard)board).showPieces(player.getPieces());
