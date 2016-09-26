@@ -27,7 +27,10 @@ public class Dealer {
         usedPieces = new ArrayList<>();
         pieceChainValidator = new PieceChainValidator();
     }
-    
+    public void setPiecesStatues(int leftmostValue, int rightmostValue){
+        pieceChainValidator.setPiecesStatuses(usedPieces, leftmostValue, rightmostValue);
+    }
+            
     public void setMovementBuilder(MovementBuilder movementBuilder){
         this.movementBuilder = movementBuilder;
     }
@@ -72,12 +75,8 @@ public class Dealer {
         do{
             movementBuilder.setPlayer(player);
             currentMove = movementBuilder.generateMovement(board);
-            
             if(!currentMove.isPass())
                 usedPieces.add(currentMove.getPiece());
-            
-            PieceChain pieceChain = board.getPieceChain();
-            pieceChainValidator.setPiecesStatuses(usedPieces, pieceChain.getLeftmostValue(), pieceChain.getRightmostValue());
         }while(!(turn.validateMove(currentMove, board)));
         return currentMove;
     }

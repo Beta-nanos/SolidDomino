@@ -12,7 +12,6 @@ public class PieceChainValidator {
     
     boolean checkDrawedGame() {
         boolean isDrawed = false;
-        
         if(valueIsUsedUp(leftmostValue) && valueIsUsedUp(rightmostValue))
             isDrawed = true;
         
@@ -27,12 +26,10 @@ public class PieceChainValidator {
 
     private boolean valueIsUsedUp(int value) {
         int valuesFound = 0;
-        
         for(Piece piece : usedPieces){
             if(piece.getLeftValue() == value || piece.getRightValue() == value)
                 valuesFound++;
         }
-        
         return valuesFound == VALUES_TO_COUNT;
     }
 }

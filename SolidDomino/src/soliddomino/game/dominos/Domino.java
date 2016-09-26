@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import soliddomino.game.boards.ConsoleBoard;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
+import soliddomino.game.managers.PieceChain;
 import soliddomino.game.movement.MovementBuilder;
 
 public abstract class Domino {
@@ -49,7 +50,7 @@ public abstract class Domino {
             currentPlayer = dealer.nextPlayerTakingTurn(currentPlayer);
             getMovementFromPlayer(currentPlayer);
             isDrawedGame = dealer.gameIsDrawed();
-        }while(!(turn.hasWon(currentPlayer)) || isDrawedGame);
+        }while(!isDrawedGame && !(turn.hasWon(currentPlayer)));
         
         return isDrawedGame ? getDrawWinner() : currentPlayer.getName() ;
     } 
@@ -60,6 +61,10 @@ public abstract class Domino {
             dealer.addPieceToPlayer(currentPlayer, pieces);
         else
             board.applyMove(currentMove);
+        PieceChain pieceChain = board.getPieceChain();
+        dealer.setPiecesStatues(
+                pieceChain.getLeftmostValue(),
+                pieceChain.getRightmostValue());
     }
     
     private void createPlayers(int numberOfPlayers) {
