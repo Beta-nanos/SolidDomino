@@ -8,6 +8,7 @@ import soliddomino.game.movement.Movement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import soliddomino.game.boards.ConsoleBoard;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import static soliddomino.game.dominos.Domino.PIECES_PER_PLAYER;
 import soliddomino.game.exceptions.InvalidPiecePairingException;
@@ -24,7 +25,6 @@ public class Dealer {
         this.players = players;
         this.turn = new Turn();
         usedPieces = new ArrayList<>();
-        players = new ArrayList<>();
         pieceChainValidator = new PieceChainValidator();
     }
     
@@ -60,6 +60,8 @@ public class Dealer {
         Movement currentMove = null;
         try {
             currentMove = buildingMovement(player, currentMove, board);
+            System.out.println("printing piece chain");
+            ((ConsoleBoard)board).showPieceChain(usedPieces.get(0));
         } catch (InvalidPiecePairingException ex) {
             System.out.println(ex.getMessage());
             pieceRollback(player);
@@ -126,5 +128,9 @@ public class Dealer {
 
     public boolean gameIsDrawed() {
         return pieceChainValidator.checkDrawedGame();
+    }
+
+    public void setStartingPieceUsed(Piece startingPiece) {
+        this.usedPieces.add(startingPiece);
     }
 }

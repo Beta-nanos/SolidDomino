@@ -14,4 +14,5 @@ public interface Board {
     public PieceChain getPieceChain();
     public void showCurrentTails();
     public void applyFirstMove(Player firstPlayer);
+    public void showPieceChain(Piece piece);
 }

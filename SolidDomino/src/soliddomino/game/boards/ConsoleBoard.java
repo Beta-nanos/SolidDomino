@@ -102,4 +102,27 @@ public class ConsoleBoard implements Board {
             pieceChain.appendToNewAndOldTailPieces(currentMove, endingPiece);
         }
     }
+
+    @Override
+    public void showPieceChain(Piece piece) {
+        printPieceChain(piece, false); 
+        System.out.println("");
+    }
+
+    private void printPieceChain(Piece piece, boolean leftMostPieceReached) {
+        if(piece!=null){
+            if(!leftMostPieceReached){
+                if(piece.getLeftPiece()!=null)
+                    printPieceChain(piece.getLeftPiece(),false);
+                else{
+                    System.out.printf(" %d|%d ",piece.getLeftValue(), piece.getRightValue());
+                    printPieceChain(piece.getRightPiece(),true);
+                }
+            }else{
+                System.out.printf(" %d|%d ",piece.getLeftValue(), piece.getRightValue());
+                printPieceChain(piece.getRightPiece(),true);
+            }
+        }
+          
+    }
 }
