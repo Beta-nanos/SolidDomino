@@ -10,10 +10,7 @@ public interface Board {
     public void shuffle(List<Piece> pieces);
     public void applyMove(Movement currentMove);
     public void showPieces(List<Piece> pieces);
-    public int getLeftmostValue();
-    public int getRightmostValue();
-    public void setStartingPiece(Piece piece);
-    public Piece getStartingPiece();
+    public PieceChain getPieceChain();
     public void showCurrentTails();
     public void applyFirstMove(Player firstPlayer);
 }

@@ -3,27 +3,20 @@ package soliddomino.game.managers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
-import soliddomino.game.movement.DIRECTION;
 import soliddomino.game.movement.Movement;
 import soliddomino.game.exceptions.MaxNotBiggerThanMin;
 
 public class ConsoleBoard implements Board {
+    private PieceChain pieceChain;
 
-    private Piece startingPiece = null;
+    public ConsoleBoard() {
+        pieceChain = new PieceChain();
+    }    
     
-    @Override
-    public void setStartingPiece(Piece piece) {
-        if(startingPiece == null)
-            startingPiece = piece;
-    }
-
-    @Override
-    public Piece getStartingPiece() {
-        return startingPiece;
+    public PieceChain getPieceChain(){
+        return pieceChain;
     }
     
     @Override
@@ -34,8 +27,26 @@ public class ConsoleBoard implements Board {
             loadSubsetPieces(i, pieces);
         return pieces;
     }
+    
+    @Override
+    public void showPieces(List<Piece> pieces) {
+        System.out.println("Piece #: left Value|right Value");
+        for (int i = 0; i < pieces.size(); i++) {
+            Piece tempPiece = pieces.get(i);
+            System.out.println("Piece " + (i + 1) + ": " + tempPiece.getLeftValue() + "|" + tempPiece.getRightValue());
+        }
+    }
 
-    public void loadSubsetPieces(int currentIndex, List<Piece> pieces) {
+    @Override
+    public void showCurrentTails() {
+        if (pieceChain.getStartingPiece() == null)
+            System.out.println("No starting piece, yet");
+        else 
+            System.out.println("Left tail: " + pieceChain.getLeftmostValue() 
+                    + ", right tail: " + pieceChain.getRightmostValue());
+    }
+
+    private void loadSubsetPieces(int currentIndex, List<Piece> pieces) {
         for (int u = 0; u <= currentIndex; u++)
             pieces.add(new Piece(currentIndex, u));
     }
@@ -76,99 +87,17 @@ public class ConsoleBoard implements Board {
         if (firstPlayer.getHighestPair() == null)
             gameStartingPiece = firstPlayer.getHighestPiece();
         
-        setStartingPiece(gameStartingPiece);
+        pieceChain.setStartingPiece(gameStartingPiece);
         firstPlayer.getPieces().remove(gameStartingPiece);
     }
 
     @Override
     public void applyMove(Movement currentMove) {
-        if (getStartingPiece() == null)
-            setStartingPiece(currentMove.getPiece());
+        if (pieceChain.getStartingPiece() == null)
+            pieceChain.setStartingPiece(currentMove.getPiece());
         else {
-            Piece endingPiece = getEndPieceByDirection(currentMove.getDirection());
-            appendToNewAndOldTailPieces(currentMove, endingPiece);
+            Piece endingPiece = pieceChain.getEndPieceByDirection(currentMove.getDirection(), this);
+            pieceChain.appendToNewAndOldTailPieces(currentMove, endingPiece);
         }
-    }
-
-    private void appendToNewAndOldTailPieces(Movement currrentMovement, Piece oldTailPiece) {
-        Piece newTailPiece = currrentMovement.getPiece();
-        if (currrentMovement.getDirection() == DIRECTION.LEFT){
-            if(oldTailPiece.getLeftValue() == newTailPiece.getLeftValue())
-                newTailPiece.invertValues();
-            oldTailPiece.setLeftPiece(newTailPiece);
-            newTailPiece.setRightPiece(oldTailPiece);
-        }
-        else{
-            if(oldTailPiece.getRightValue()== newTailPiece.getRightValue())
-                newTailPiece.invertValues();
-            oldTailPiece.setRightPiece(newTailPiece);
-            newTailPiece.setLeftPiece(oldTailPiece);
-        }
-    }
-
-    private Piece getEndPieceByDirection(DIRECTION direction) {
-        if (direction == DIRECTION.LEFT) {
-            return getLeftmostPiece(getStartingPiece());
-        } else {
-            return getRightmostPiece(getStartingPiece());
-        }
-    }
-
-    private Piece getLeftmostPiece(Piece currentPiece) {
-        if(currentPiece.getLeftPiece() == null)
-            return currentPiece;
-        
-        return getLeftmostPiece(currentPiece.getLeftPiece());
-    }
-
-    private Piece getRightmostPiece(Piece currentPiece) {
-        if(currentPiece.getRightPiece() == null)
-            return currentPiece;
-        
-        return getRightmostPiece(currentPiece.getRightPiece());
-    }
-
-    @Override
-    public void showPieces(List<Piece> pieces) {
-        System.out.println("Piece #: left Value|right Value");
-        for (int i = 0; i < pieces.size(); i++) {
-            Piece tempPiece = pieces.get(i);
-            System.out.println("Piece " + (i + 1) + ": " + tempPiece.getLeftValue() + "|" + tempPiece.getRightValue());
-        }
-    }
-
-    @Override
-    public void showCurrentTails() {
-        if (getStartingPiece() == null)
-            System.out.println("No starting piece, yet");
-        else 
-            System.out.println("Left tail: " + getLeftmostValue() + ", right tail: " + getRightmostValue());
-    }
-
-    @Override
-    public int getLeftmostValue() {
-        Piece currentStartingPiece = getStartingPiece();
-        if (currentStartingPiece.getLeftPiece() == null)
-            return getFreeValue(currentStartingPiece);
-        
-        Piece currentPiece = getLeftmostPiece(currentStartingPiece);
-        return getFreeValue(currentPiece);
-    }
-
-    @Override
-    public int getRightmostValue() {
-        Piece currentStartingPiece = getStartingPiece();
-        if (currentStartingPiece.getRightPiece() == null)
-            return getFreeValue(currentStartingPiece);
-        
-        Piece currentPiece = getRightmostPiece(currentStartingPiece);
-        return getFreeValue(currentPiece);
-    }
-
-    public int getFreeValue(Piece piece) {
-        if (piece.getLeftPiece() == null)
-            return piece.getLeftValue();
-        else
-            return piece.getRightValue();
     }
 }

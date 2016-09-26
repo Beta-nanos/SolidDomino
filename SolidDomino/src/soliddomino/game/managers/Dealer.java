@@ -7,8 +7,6 @@ import soliddomino.game.movement.Movement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import static soliddomino.game.dominos.Domino.PIECES_PER_PLAYER;
 import soliddomino.game.exceptions.InvalidPiecePairingException;
@@ -83,9 +81,9 @@ public class Dealer {
     private void fillHighestPair(HashMap<Player, Piece> playerPieces){
         for(Player player : players){
             Piece highestPair = player.getHighestPair();
-            if(highestPair != null){
+            if(highestPair != null)
                 playerPieces.put(player, highestPair);
-            }
+            
             playerPieces.remove(player, null);
         }
     }
@@ -96,8 +94,8 @@ public class Dealer {
     }
     
     private Player getTopFromHashMap(HashMap<Player, Piece> playersPieces){
-        List<Piece> pieceList = new ArrayList<Piece>(playersPieces.values());
-        List<Player> playerList = new ArrayList<Player>(playersPieces.keySet());
+        List<Piece> pieceList = new ArrayList<>(playersPieces.values());
+        List<Player> playerList = new ArrayList<>(playersPieces.keySet());
         int index = 0;
         for(int i = 0; i < playerList.size() ; i++){
             if(pieceList.get(index).getSumOfValues() < pieceList.get(i).getSumOfValues()){

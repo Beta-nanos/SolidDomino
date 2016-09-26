@@ -48,5 +48,13 @@ public class Piece {
     public void setRightPiece(Piece rightPiece) {
         this.rightPiece = rightPiece;
     }
+
+    public int getFreeValue() {
+        if (this.getLeftPiece() == null) {
+            return this.getLeftValue();
+        } else {
+            return this.getRightValue();
+        }
+    }
     
 }
