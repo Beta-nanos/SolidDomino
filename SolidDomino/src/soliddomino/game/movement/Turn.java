@@ -27,7 +27,9 @@ public class Turn {
         
         if(!currentMove.isPass())
             validMove = isValidPair(currentDirection, piece.getLeftValue(), 
-                    board.getLeftmostValue(), piece.getRightValue(), board.getRightmostValue(), piece);
+                    board.getPieceChain().getLeftmostValue(), 
+                    piece.getRightValue(), 
+                    board.getPieceChain().getRightmostValue(), piece);
         else
             validMove = true;
         
