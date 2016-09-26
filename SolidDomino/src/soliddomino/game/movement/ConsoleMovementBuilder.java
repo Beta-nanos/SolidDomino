@@ -1,13 +1,14 @@
 package soliddomino.game.movement;
 
+import soliddomino.game.exceptions.WrongPieceIndexException;
 import java.util.List;
 import java.util.Scanner;
 import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.exceptions.IncorrectMoveFormatException;
 import soliddomino.game.exceptions.WrongDirectionException;
-import soliddomino.game.managers.Board;
-import soliddomino.game.managers.ConsoleBoard;
+import soliddomino.game.boards.Board;
+import soliddomino.game.boards.ConsoleBoard;
 
 public class ConsoleMovementBuilder implements MovementBuilder{
     private Player player;
@@ -28,10 +29,11 @@ public class ConsoleMovementBuilder implements MovementBuilder{
         String answer = questionAndGetAnswer(message);
         try {
             movement = answerValidation(answer);
-        } catch (IncorrectMoveFormatException | NumberFormatException | WrongDirectionException ex) {
+        } catch (IncorrectMoveFormatException | NumberFormatException | WrongDirectionException | WrongPieceIndexException ex) {
             System.out.println(ex.getMessage());
             movement = generateMovement(board);
-        }
+        } 
+        
         return movement;
     }
 
@@ -42,7 +44,7 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     }
 
     @Override
-    public Movement answerValidation(String answer) throws IncorrectMoveFormatException, NumberFormatException, WrongDirectionException {
+    public Movement answerValidation(String answer) throws IncorrectMoveFormatException, NumberFormatException, WrongDirectionException, WrongPieceIndexException {
         Movement movement = null;
         if (answer.equalsIgnoreCase("pass") || answer.toLowerCase().charAt(0) == 'p') {
             movement = new Movement(true);
@@ -58,14 +60,16 @@ public class ConsoleMovementBuilder implements MovementBuilder{
     }
 
     @Override
-    public Movement buildMovement(int index, String direction) throws WrongDirectionException {
+    public Movement buildMovement(int index, String direction) throws WrongDirectionException, WrongPieceIndexException {
         Movement movement = null;
         List<Piece> playerPieces = player.getPieces();
-        if (index >= 0 && index < playerPieces.size()) {
+        int playerPiecesSize = playerPieces.size();
+        if (index >= 0 && index < playerPiecesSize) {
             movement = new Movement(playerPieces.get(index), 
                     buildDirection(direction));
             playerPieces.remove(index);
-        }
+        }else
+            throw new WrongPieceIndexException(index, playerPiecesSize);
         return movement;
     }
 

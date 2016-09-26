@@ -2,7 +2,7 @@ package soliddomino.game.movement;
 
 import soliddomino.game.exceptions.InvalidPiecePairingException;
 import soliddomino.game.components.Piece;
-import soliddomino.game.managers.Board;
+import soliddomino.game.boards.Board;
 import soliddomino.game.components.Player;
 
 public class Turn {

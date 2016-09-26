@@ -1,5 +1,6 @@
 package soliddomino.game.managers;
 
+import soliddomino.game.boards.Board;
 import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.movement.Turn;
@@ -7,20 +8,24 @@ import soliddomino.game.movement.Movement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import soliddomino.game.boards.ConsoleBoard;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import static soliddomino.game.dominos.Domino.PIECES_PER_PLAYER;
 import soliddomino.game.exceptions.InvalidPiecePairingException;
 import soliddomino.game.movement.MovementBuilder;
 
 public class Dealer {
-    private List<Player> players = new ArrayList<>();
+    private List<Player> players;
     private Turn turn;
-    private List<Piece> usedPieces = new ArrayList<>();
+    private List<Piece> usedPieces;
     private MovementBuilder movementBuilder;
+    private PieceChainValidator pieceChainValidator;
             
     public Dealer(List<Player> players){
         this.players = players;
         this.turn = new Turn();
+        usedPieces = new ArrayList<>();
+        pieceChainValidator = new PieceChainValidator();
     }
     
     public void setMovementBuilder(MovementBuilder movementBuilder){
@@ -55,6 +60,8 @@ public class Dealer {
         Movement currentMove = null;
         try {
             currentMove = buildingMovement(player, currentMove, board);
+            System.out.println("printing piece chain");
+            ((ConsoleBoard)board).showPieceChain(usedPieces.get(0));
         } catch (InvalidPiecePairingException ex) {
             System.out.println(ex.getMessage());
             pieceRollback(player);
@@ -67,7 +74,12 @@ public class Dealer {
         do{
             movementBuilder.setPlayer(player);
             currentMove = movementBuilder.generateMovement(board);
-            usedPieces.add(currentMove.getPiece());
+            
+            if(!currentMove.isPass())
+                usedPieces.add(currentMove.getPiece());
+            
+            PieceChain pieceChain = board.getPieceChain();
+            pieceChainValidator.setPiecesStatuses(usedPieces, pieceChain.getLeftmostValue(), pieceChain.getRightmostValue());
         }while(!(turn.validateMove(currentMove, board)));
         return currentMove;
     }
@@ -112,5 +124,13 @@ public class Dealer {
             System.out.println(ex.getMessage());
         }
     
+    }
+
+    public boolean gameIsDrawed() {
+        return pieceChainValidator.checkDrawedGame();
+    }
+
+    public void setStartingPieceUsed(Piece startingPiece) {
+        this.usedPieces.add(startingPiece);
     }
 }

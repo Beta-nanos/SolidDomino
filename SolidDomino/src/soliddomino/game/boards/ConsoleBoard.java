@@ -1,4 +1,4 @@
-package soliddomino.game.managers;
+package soliddomino.game.boards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.movement.Movement;
 import soliddomino.game.exceptions.MaxNotBiggerThanMin;
+import soliddomino.game.managers.PieceChain;
 
 public class ConsoleBoard implements Board {
     private PieceChain pieceChain;
@@ -15,6 +16,7 @@ public class ConsoleBoard implements Board {
         pieceChain = new PieceChain();
     }    
     
+    @Override
     public PieceChain getPieceChain(){
         return pieceChain;
     }
@@ -99,5 +101,28 @@ public class ConsoleBoard implements Board {
             Piece endingPiece = pieceChain.getEndPieceByDirection(currentMove.getDirection(), this);
             pieceChain.appendToNewAndOldTailPieces(currentMove, endingPiece);
         }
+    }
+
+    @Override
+    public void showPieceChain(Piece piece) {
+        printPieceChain(piece, false); 
+        System.out.println("");
+    }
+
+    private void printPieceChain(Piece piece, boolean leftMostPieceReached) {
+        if(piece!=null){
+            if(!leftMostPieceReached){
+                if(piece.getLeftPiece()!=null)
+                    printPieceChain(piece.getLeftPiece(),false);
+                else{
+                    System.out.printf(" %d|%d ",piece.getLeftValue(), piece.getRightValue());
+                    printPieceChain(piece.getRightPiece(),true);
+                }
+            }else{
+                System.out.printf(" %d|%d ",piece.getLeftValue(), piece.getRightValue());
+                printPieceChain(piece.getRightPiece(),true);
+            }
+        }
+          
     }
 }
