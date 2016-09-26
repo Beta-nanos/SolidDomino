@@ -4,31 +4,43 @@ import java.util.ArrayList;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import java.util.List;
 
-public class Player {
+public class Player implements Comparable<Player> {
+
     private final String name;
     private List<Piece> pieces = new ArrayList<>();
-    
+
     public Player(String name) {
-        this.name =  name;
+        this.name = name;
     }
-    
+
     public String getName() {
         return name;
     }
-    
-    public List<Piece> getPieces(){
+
+    public List<Piece> getPieces() {
         return this.pieces;
     }
-    
-    public void getLastUsedPiece(Piece piece){
+
+    public int getSumOfPiecesValues() {
+        int sumOfPiecesValues = 0;
+
+        for (Piece piece : this.pieces) {
+            sumOfPiecesValues += piece.getLeftValue() + piece.getRightValue();
+        }
+
+        return sumOfPiecesValues;
+    }
+
+    public void getLastUsedPiece(Piece piece) {
         pieces.add(piece);
     }
-    
+
     public void takePieces(int piecesToTake, List<Piece> pieces) throws NoPiecesToTakeException {
-        if(pieces.isEmpty())
+        if (pieces.isEmpty()) {
             throw new NoPiecesToTakeException();
-        
-        for(int i =0; i < piecesToTake; i++){    
+        }
+
+        for (int i = 0; i < piecesToTake; i++) {
             this.pieces.add(pieces.get(i));
             pieces.remove(i);
         }
@@ -38,7 +50,7 @@ public class Player {
         List<Piece> pairs = new ArrayList<>();
         getPairs(pairs);
         Piece highestPair = null;
-        if(!pairs.isEmpty()){
+        if (!pairs.isEmpty()) {
             highestPair = pairs.get(0);
             highestPair = comparePieces(pairs, highestPair);
         }
@@ -46,18 +58,20 @@ public class Player {
     }
 
     private Piece comparePieces(List<Piece> pieces, Piece highesPair) {
-        for(int i =1; i < pieces.size(); i++){
+        for (int i = 1; i < pieces.size(); i++) {
             Piece tempPiece = pieces.get(i);
-            if(highesPair.getSumOfValues() < tempPiece.getSumOfValues())
+            if (highesPair.getSumOfValues() < tempPiece.getSumOfValues()) {
                 highesPair = tempPiece;
+            }
         }
         return highesPair;
     }
 
     private void getPairs(List<Piece> pairs) {
-        for(Piece piece : pieces){
-            if(piece.isPair())
+        for (Piece piece : pieces) {
+            if (piece.isPair()) {
                 pairs.add(piece);
+            }
         }
     }
 
@@ -65,5 +79,18 @@ public class Player {
         Piece highestPiece = pieces.get(0);
         comparePieces(pieces, highestPiece);
         return highestPiece;
-    }    
+    }
+
+    @Override
+    public int compareTo(Player rivalPlayer) {
+        int sumOfPiecesValues = this.getSumOfPiecesValues();
+        int rivalPlayerSumOfPiecesValues = rivalPlayer.getSumOfPiecesValues();
+        
+        if (sumOfPiecesValues == rivalPlayerSumOfPiecesValues) 
+            return 0;
+        else if (sumOfPiecesValues > rivalPlayerSumOfPiecesValues) 
+            return 1;
+        else 
+            return -1;        
+    }
 }

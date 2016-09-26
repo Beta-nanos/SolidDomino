@@ -1,13 +1,14 @@
 package soliddomino.game.movement;
 
+import soliddomino.game.exceptions.WrongPieceIndexException;
 import java.util.List;
 import java.util.Scanner;
 import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.exceptions.IncorrectMoveFormatException;
 import soliddomino.game.exceptions.WrongDirectionException;
-import soliddomino.game.managers.Board;
-import soliddomino.game.managers.ConsoleBoard;
+import soliddomino.game.boards.Board;
+import soliddomino.game.boards.ConsoleBoard;
 
 public class ConsoleMovementBuilder implements MovementBuilder{
     private Player player;

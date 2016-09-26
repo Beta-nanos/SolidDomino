@@ -1,5 +1,6 @@
 package soliddomino.game.managers;
 
+import soliddomino.game.boards.Board;
 import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.movement.Turn;
@@ -13,14 +14,18 @@ import soliddomino.game.exceptions.InvalidPiecePairingException;
 import soliddomino.game.movement.MovementBuilder;
 
 public class Dealer {
-    private List<Player> players = new ArrayList<>();
+    private List<Player> players;
     private Turn turn;
-    private List<Piece> usedPieces = new ArrayList<>();
+    private List<Piece> usedPieces;
     private MovementBuilder movementBuilder;
+    private PieceChainValidator pieceChainValidator;
             
     public Dealer(List<Player> players){
         this.players = players;
         this.turn = new Turn();
+        usedPieces = new ArrayList<>();
+        players = new ArrayList<>();
+        pieceChainValidator = new PieceChainValidator();
     }
     
     public void setMovementBuilder(MovementBuilder movementBuilder){
@@ -67,7 +72,12 @@ public class Dealer {
         do{
             movementBuilder.setPlayer(player);
             currentMove = movementBuilder.generateMovement(board);
-            usedPieces.add(currentMove.getPiece());
+            
+            if(!currentMove.isPass())
+                usedPieces.add(currentMove.getPiece());
+            
+            PieceChain pieceChain = board.getPieceChain();
+            pieceChainValidator.setPiecesStatuses(usedPieces, pieceChain.getLeftmostValue(), pieceChain.getRightmostValue());
         }while(!(turn.validateMove(currentMove, board)));
         return currentMove;
     }
@@ -112,5 +122,9 @@ public class Dealer {
             System.out.println(ex.getMessage());
         }
     
+    }
+
+    public boolean gameIsDrawed() {
+        return pieceChainValidator.checkDrawedGame();
     }
 }

@@ -1,5 +1,6 @@
 package soliddomino.game.managers;
 
+import soliddomino.game.boards.ConsoleBoard;
 import soliddomino.game.components.Piece;
 import soliddomino.game.movement.DIRECTION;
 import soliddomino.game.movement.Movement;

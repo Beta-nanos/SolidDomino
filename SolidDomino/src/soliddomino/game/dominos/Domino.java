@@ -1,15 +1,14 @@
 package soliddomino.game.dominos;
 
 import soliddomino.game.managers.Dealer;
-import soliddomino.game.managers.Board;
+import soliddomino.game.boards.Board;
 import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.movement.Turn;
 import soliddomino.game.movement.Movement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import soliddomino.game.exceptions.NoPiecesToTakeException;
 import soliddomino.game.movement.MovementBuilder;
 
@@ -36,18 +35,21 @@ public abstract class Domino {
         try {
             dealer.distributePiecesToPlayers(pieces);
         } catch (NoPiecesToTakeException ex) {
-            Logger.getLogger(Domino.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
     }
     
     public String play(){
         Player currentPlayer = dealer.chooseStartingPlayer();
         board.applyFirstMove(currentPlayer);
+        boolean isDrawedGame = false;
         do {
             currentPlayer = dealer.nextPlayerTakingTurn(currentPlayer);
             getMovementFromPlayer(currentPlayer);
-        }while(!(turn.hasWon(currentPlayer)));
-        return currentPlayer.getName();
+            isDrawedGame = dealer.gameIsDrawed();
+        }while(!(turn.hasWon(currentPlayer)) || isDrawedGame);
+        
+        return isDrawedGame ? getDrawWinner() : currentPlayer.getName() ;
     } 
 
     private void getMovementFromPlayer(Player currentPlayer) {
@@ -61,6 +63,20 @@ public abstract class Domino {
     private void createPlayers(int numberOfPlayers) {
         for(int i = 1; i <= numberOfPlayers; i++)
             players.add(new Player("Player " + i));
+    }
+
+    private String getDrawWinner() {
+        /*List<Integer> sumsOfValuesOfPlayerPieces = new ArrayList<>();
+        
+        for(Player player : this.players)
+            sumsOfValuesOfPlayerPieces.add(new Integer(player.getSumOfPiecesValues()));
+        
+        Collections.sort(sumsOfValuesOfPlayerPieces);*/
+        Collections.sort(players);
+        
+        Player drawWinner = players.get(0);
+        
+        return drawWinner.getName() + " with " + drawWinner.getSumOfPiecesValues();
     }
     
 }

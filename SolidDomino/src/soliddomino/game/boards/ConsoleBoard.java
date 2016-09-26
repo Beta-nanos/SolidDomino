@@ -1,4 +1,4 @@
-package soliddomino.game.managers;
+package soliddomino.game.boards;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import soliddomino.game.components.Piece;
 import soliddomino.game.components.Player;
 import soliddomino.game.movement.Movement;
 import soliddomino.game.exceptions.MaxNotBiggerThanMin;
+import soliddomino.game.managers.PieceChain;
 
 public class ConsoleBoard implements Board {
     private PieceChain pieceChain;
