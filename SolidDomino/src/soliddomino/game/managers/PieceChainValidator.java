@@ -27,12 +27,8 @@ public class PieceChainValidator {
 
     private boolean valueIsUsedUp(int value) {
         int valuesFound = 0;
-        System.out.println(usedPieces.size());
-        System.out.println("Lmost: " + leftmostValue);
-        System.out.println("Rmost: " + rightmostValue);
+        
         for(Piece piece : usedPieces){
-            System.out.println("For left: " + piece.getLeftValue());
-            System.out.println("For right: " + piece.getRightValue());
             if(piece.getLeftValue() == value || piece.getRightValue() == value)
                 valuesFound++;
         }

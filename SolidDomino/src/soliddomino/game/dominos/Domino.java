@@ -66,14 +66,7 @@ public abstract class Domino {
     }
 
     private String getDrawWinner() {
-        /*List<Integer> sumsOfValuesOfPlayerPieces = new ArrayList<>();
-        
-        for(Player player : this.players)
-            sumsOfValuesOfPlayerPieces.add(new Integer(player.getSumOfPiecesValues()));
-        
-        Collections.sort(sumsOfValuesOfPlayerPieces);*/
-        Collections.sort(players);
-        
+        Collections.sort(players); 
         Player drawWinner = players.get(0);
         
         return drawWinner.getName() + " with " + drawWinner.getSumOfPiecesValues();
