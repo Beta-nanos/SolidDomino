@@ -44,7 +44,7 @@ public abstract class Domino {
     public String play(){
         Player currentPlayer = dealer.chooseStartingPlayer();
         board.applyFirstMove(currentPlayer);
-        dealer.setStartingPieceUsed(((ConsoleBoard)board).getPieceChain().getStartingPiece());
+        dealer.setStartingPieceUsed((board).getPieceChain().getStartingPiece());
         boolean isDrawedGame = false;
         do {
             currentPlayer = dealer.nextPlayerTakingTurn(currentPlayer);
